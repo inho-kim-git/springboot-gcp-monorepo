@@ -1,0 +1,24 @@
+bootJar {
+    enabled = false
+}
+jar {
+    enabled = true
+}
+dependencies {
+
+    // Spring basic spec
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // GCP libraries
+    implementation platform('com.google.cloud:libraries-bom:23.0.0')
+    implementation 'com.google.cloud:google-cloud-pubsub'
+
+    // lombok
+    annotationProcessor 'org.projectlombok:lombok'
+    implementation 'org.projectlombok:lombok'
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+
+    //test
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}

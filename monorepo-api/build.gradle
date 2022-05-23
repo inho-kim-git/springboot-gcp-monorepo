@@ -1,0 +1,8 @@
+bootJar {
+    archiveFileName = 'application.jar'
+}
+dependencies {
+
+    // Parent Module
+    implementation project(path: ":monorepo-common", configuration: 'default')
+}
