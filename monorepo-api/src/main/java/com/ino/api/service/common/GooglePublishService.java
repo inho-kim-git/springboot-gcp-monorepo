@@ -7,34 +7,51 @@ import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsub.v1.Publisher;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.protobuf.ByteString;
+import com.google.pubsub.v1.ProjectTopicName;
 import com.google.pubsub.v1.PubsubMessage;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-@SpringBootTest
-@ActiveProfiles("dev")
-class GooglePubSubServiceTest {
+/**
+ * @Description Message Publish Service
+ *
+ * @Date 2022/05/23
+ * @Author inho.kim
+ */
+@Service
+@Slf4j
+@RequiredArgsConstructor
+public class GooglePublishService {
 
-    @Autowired
-    Publisher testTopicPublisher;
+    private Publisher testTopicPublisher;
 
-    @Test
-    void publish() {
+    @PostConstruct
+    public void init() throws IOException {
+
+        ProjectTopicName testTopic = ProjectTopicName.newBuilder()
+                .setProject("docsflow-2")
+                .setTopic("testTopic")
+                .build();
+
+        testTopicPublisher = Publisher.newBuilder(testTopic).build();
+    }
+
+    public void publish() {
 
         try {
 
             List<String> messages = Arrays.asList("first message", "second message");
-
             for (final String message : messages) {
                 ByteString data = ByteString.copyFromUtf8(message);
                 PubsubMessage pubsubMessage = PubsubMessage.newBuilder()
                         .setData(data)
-                        .putAttributes("test","test")
+                        .putAttributes("test", "test")
                         .build();
 
                 // Once published, returns a server-assigned message id (unique within the topic)
